@@ -2,7 +2,6 @@
 
 namespace malzariey\ProductionDebugbar\Middleware;
 
-use App\Cookies\EnableDebugBarInProduction;
 use Closure;
 use Illuminate\Http\Request;
 use malzariey\ProductionDebugbar\ProductionDebugbar;
@@ -13,6 +12,7 @@ class Tester
 {
     public function handle(Request $request, Closure $next): Response
     {
+        dd(config('production-debugbar.url_key'));
         if (str_contains($request->fullUrl(),config('production-debugbar.url_key'))) {
             return redirect('/')->withCookie(
                 ProductionDebugbar::create()

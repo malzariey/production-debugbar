@@ -2,11 +2,11 @@
 
 namespace malzariey\ProductionDebugbar;
 
-use Illuminate\Contracts\Http\Kernel;
+use Filament\Panel;
+use Illuminate\Routing\Router;
 use malzariey\ProductionDebugbar\Middleware\Tester;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Illuminate\Routing\Router;
 
 class ProductionDebugbarServiceProvider extends PackageServiceProvider
 {
@@ -14,18 +14,39 @@ class ProductionDebugbarServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('production-debugbar')
-
             ->hasConfigFile();
 
     }
 
     public function bootingPackage()
     {
-        parent::packageBooted();
-
-        $kernel = $this->app->make(Kernel::class);
-
-        $kernel->appendMiddlewareToGroup('web', Tester::class);
-
+        $route = $this->app
+            ->get(Router::class);
+        foreach ($route->getMiddlewareGroups() as $group => $routeGroup) {
+            $route->prependMiddlewareToGroup($group, Tester::class);
+        }
+        $this->registerPluginMiddleware();
     }
+
+    public function registerPluginMiddleware(): void
+    {
+        collect(collect(filament()?->getPanels() ?? [])
+            ->toArray())
+            ->each(fn ($panel) => $this->reorderCurrentPanelMiddlewareStack($panel));
+    }
+
+    protected function reorderCurrentPanelMiddlewareStack(Panel $panel): void
+    {
+        $middlewareStack = invade($panel)->getMiddleware();
+
+        $middleware = Tester::class;
+
+        $middlewareCollection = collect($middlewareStack);
+
+        $middlewareCollection->push($middleware);
+
+
+        invade($panel)->middleware = $middlewareCollection->toArray();
+    }
+
 }
