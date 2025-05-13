@@ -6,18 +6,23 @@ use Closure;
 use Illuminate\Http\Request;
 use malzariey\ProductionDebugbar\ProductionDebugbar;
 use Symfony\Component\HttpFoundation\Response;
-use function App\Http\Middleware\redirect;
 
 class Tester
 {
     public function handle(Request $request, Closure $next): Response
     {
-        dd(config('production-debugbar.url_key'));
-        if (str_contains($request->fullUrl(),config('production-debugbar.url_key'))) {
-            return redirect('/')->withCookie(
+        $debugbarKey = config('production-debugbar.password');
+
+        // 1. Check specifically if the request has the query parameter
+        if ($request->has($debugbarKey)) {
+            $redirect_url = str_replace($debugbarKey, "", $request->getUri());
+
+            // 2. Perform the redirect with the cookie
+            return redirect($redirect_url)->withCookie(
                 ProductionDebugbar::create()
             );
         }
+
 
         return $next($request);
     }

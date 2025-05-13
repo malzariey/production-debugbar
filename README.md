@@ -29,19 +29,48 @@ You can publish the config file with:
 php artisan vendor:publish --tag="production-debugbar-config"
 ```
 
-This is the contents of the published config file:
+This is the contents of the published config file with the default password used to enable the debugbar:
 
 ```php
 return [
+    "password" => env("PRODUCTION_DEBUGBAR_PASSWORD", "MyPassword"),
 ];
+
+
 ```
+**Note**: 
+
+Make sure to add PRODUCTION_DEBUGBAR_PASSWORD to your .env file if you want to change the password configuration.
 
 ## Usage
+To enable and utilize the Production Debugbar, add the following line to the boot method of your AppServiceProvider.php file as the first line:
+
+
 
 ```php
-$productionDebugbar = new malzariey\ProductionDebugbar();
-echo $productionDebugbar->echoPhrase('Hello, Majid Al Zariey!');
+<?php
+
+namespace App\Providers;
+
+use malzariey\ProductionDebugbar\ProductionDebugbar; // Add this use statement
+
+class AppServiceProvider extends ServiceProvider
+{
+
+    public function boot(): void
+    {
+        ProductionDebugbar::check(); // Add this line
+
+        // ... rest of your boot method
+    }
+}
 ```
+
+This check() method handles the logic for whether Laravel DebugBar should be active. In a production environment, you can enable the Debugbar on any route by adding a query parameter with a specific password that matches the one configured in your production-debugbar-config file. For example:
+
+https://your-production-app.com/some-route?your_configured_password
+
+Replace your_configured_password with the actual password set in your configuration.
 
 ## Changelog
 

@@ -2,5 +2,5 @@
 
 // config for malzariey/ProductionDebugbar
 return [
-    "url_key" => env("URL_KEY", "MyPassword"),
+    "password" => env("PRODUCTION_DEBUGBAR_PASSWORD", "MyPassword"),
 ];

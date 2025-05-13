@@ -2,8 +2,8 @@
 
 namespace malzariey\ProductionDebugbar;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class ProductionDebugbar {
@@ -13,7 +13,7 @@ class ProductionDebugbar {
 
         return new Cookie('enable_debug', base64_encode(json_encode([
             'expires_at' => $expiresAt->getTimestamp(),
-            'mac' => hash_hmac('sha256', $expiresAt->getTimestamp(), config('production-debugbar.url_key')),
+            'mac' => hash_hmac('sha256', $expiresAt->getTimestamp(), config('production-debugbar.password')),
         ])), $expiresAt, config('session.path'), config('session.domain'));
     }
 
@@ -26,19 +26,33 @@ class ProductionDebugbar {
      */
     public static function isValid(): bool
     {
-        if(!Request::hasCookie('enable_debug')){
+        if(!\Request::hasCookie('enable_debug')){
             return false;
         }
-
-        $cookie = \Crypt::decryptString(request()->cookie('enable_debug'));
-        $value = explode('|',$cookie)[1] ?? '';
-        $payload = json_decode(base64_decode($value), true);
+        try {
+            $cookie = \Crypt::decryptString(request()->cookie('enable_debug'));
+            $value = explode('|',$cookie)[1] ?? '';
+            $payload = json_decode(base64_decode($value), true);
+        }catch (\Exception $exception){
+            $cookie = request()->cookie('enable_debug');
+            $payload = json_decode(base64_decode($cookie), true);
+        }
 
         return is_array($payload) &&
             is_numeric($payload['expires_at'] ?? null) &&
             isset($payload['mac']) &&
-            hash_equals(hash_hmac('sha256', $payload['expires_at'], "AAlbaytAlromancy2024"), $payload['mac']) &&
+            hash_equals(hash_hmac('sha256', $payload['expires_at'], config('production-debugbar.password')), $payload['mac']) &&
             (int) $payload['expires_at'] >= Carbon::now()->getTimestamp();
+    }
+
+
+    public static function check(): bool
+    {
+        if (self::isValid()) {
+            Debugbar::enable();
+            return true;
+        }
+        return false;
     }
 
 }
