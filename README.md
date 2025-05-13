@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
 
 This check() method handles the logic for whether Laravel DebugBar should be active. In a production environment, you can enable the Debugbar on any route by adding a query parameter with a specific password that matches the one configured in your production-debugbar-config file. For example:
 
-https://your-production-app.com/some-route?your_configured_password
+https://your-production-app.com/any-route?your_configured_password
 
 Replace your_configured_password with the actual password set in your configuration.
 
