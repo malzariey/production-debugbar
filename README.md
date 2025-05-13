@@ -5,15 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/malzariey/production-debugbar/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/malzariey/production-debugbar/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/malzariey/production-debugbar.svg?style=flat-square)](https://packagist.org/packages/malzariey/production-debugbar)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/Production-Debugbar.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/Production-Debugbar)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+This package enables the powerful Laravel Debugbar for safe and effective use in production environments. It allows developers to gain valuable insights into application performance, database queries, and request lifecycle without compromising security or negatively impacting the user experience. Utilize this tool for fast debugging and performance analysis directly on your live application.
 
 ## Installation
 
