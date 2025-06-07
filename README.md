@@ -1,8 +1,6 @@
 # Use Debugbar in Production for performance analysis and fast debugging
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/malzariey/production-debugbar.svg?style=flat-square)](https://packagist.org/packages/malzariey/production-debugbar)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/malzariey/production-debugbar/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/malzariey/production-debugbar/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/malzariey/production-debugbar/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/malzariey/production-debugbar/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/malzariey/production-debugbar.svg?style=flat-square)](https://packagist.org/packages/malzariey/production-debugbar)
 
 This package enables the powerful Laravel Debugbar for safe and effective use in production environments. It allows developers to gain valuable insights into application performance, database queries, and request lifecycle without compromising security or negatively impacting the user experience. Utilize this tool for fast debugging and performance analysis directly on your live application.
