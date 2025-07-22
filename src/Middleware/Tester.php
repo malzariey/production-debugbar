@@ -11,7 +11,10 @@ class Tester
 {
     public function handle(Request $request, Closure $next): Response
     {
+        ProductionDebugbar::check($request);
+
         $debugbarKey = config('production-debugbar.password');
+
 
         // 1. Check specifically if the request has the query parameter
         if ($request->has($debugbarKey)) {

@@ -17,7 +17,9 @@
     ],
     "require": {
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0||^12.0"
+        "laravel/laravel": "v10.0 | ^11.0 || ^12.0",
+        "illuminate/contracts": "^10.0||^11.0||^12.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

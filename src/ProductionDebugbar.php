@@ -5,6 +5,7 @@ namespace malzariey\ProductionDebugbar;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Cookie;
+use Illuminate\Http\Request;
 
 class ProductionDebugbar {
     public static function create(): Cookie
@@ -24,19 +25,14 @@ class ProductionDebugbar {
      * @param  string  $key
      * @return bool
      */
-    public static function isValid(): bool
+    public static function isValid(Request $request): bool
     {
-        if(!\Request::hasCookie('enable_debug')){
+        if(!$request->hasCookie('enable_debug')){
             return false;
         }
-        try {
-            $cookie = \Crypt::decryptString(request()->cookie('enable_debug'));
-            $value = explode('|',$cookie)[1] ?? '';
-            $payload = json_decode(base64_decode($value), true);
-        }catch (\Exception $exception){
-            $cookie = request()->cookie('enable_debug');
-            $payload = json_decode(base64_decode($cookie), true);
-        }
+
+        $cookie = $request->cookie('enable_debug');
+        $payload = json_decode(base64_decode($cookie), true);
 
         return is_array($payload) &&
             is_numeric($payload['expires_at'] ?? null) &&
@@ -46,9 +42,9 @@ class ProductionDebugbar {
     }
 
 
-    public static function check(): bool
+    public static function check(?Request $request = null): bool
     {
-        if (self::isValid()) {
+        if (self::isValid($request ?? request())) {
             Debugbar::enable();
             return true;
         }
