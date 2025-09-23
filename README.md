@@ -19,11 +19,12 @@ You can publish the config file with:
 php artisan vendor:publish --tag="production-debugbar-config"
 ```
 
-This is the contents of the published config file with the default password used to enable the debugbar:
+This is the contents of the published config file, showing the default query parameter and password used for enabling the Debugbar:
 
 ```php
 return [
     "password" => env("PRODUCTION_DEBUGBAR_PASSWORD", "MyPassword"),
+    "get_parameter" => env("PRODUCTION_DEBUGBAR_GET_PARAMETER", 'pd_debug'),
 ];
 
 
@@ -34,11 +35,31 @@ Make sure to add PRODUCTION_DEBUGBAR_PASSWORD to your .env file if you want to c
 
 ## Usage
 
-This package provides a middleware that automatically checks if the Laravel Debugbar should be enabled based on request cookie, you can enable the Debugbar on any route by adding a query parameter with a specific password that matches the one configured in your production-debugbar-config file. For example:
 
-https://your-production-app.com/any-route?your_configured_password
+This package provides a middleware that automatically checks if the Laravel Debugbar should be enabled based on a request cookie. You can enable the Debugbar on any route by adding a query parameter with a specific password that matches the one configured in your `production-debugbar-config` file.
 
-Replace your_configured_password with the actual password set in your configuration.
+### Customizing the Query Parameter
+
+By default, the query parameter used to enable the Debugbar is configurable via the `production-debugbar.get_parameter` config option. This allows you to choose a custom parameter name instead of using the password directly as the parameter key.
+
+For example, if your config contains:
+
+```php
+return [
+    "password" => env("PRODUCTION_DEBUGBAR_PASSWORD", "MyPassword"),
+    "get_parameter" => env("PRODUCTION_DEBUGBAR_GET_PARAMETER", 'pd_debug'),
+];
+```
+
+You can enable the Debugbar by visiting:
+
+```
+https://your-production-app.com/any-route?pd_debug=MyPassword
+```
+
+Replace `pd_debug` with your configured parameter name, and `MyPassword` with your configured password.
+
+If you do not set `get_parameter`, the default parameter name will be used as defined in the package.
 
 ## Changelog
 
