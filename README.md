@@ -10,7 +10,7 @@ This package enables the powerful Laravel Debugbar for safe and effective use in
 You can install the package via composer:
 
 ```bash
-composer require malzariey/production-debugbar
+composer require malzariey/production-debugbar --dev
 ```
 
 You can publish the config file with:
