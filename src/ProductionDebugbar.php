@@ -7,7 +7,8 @@ use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Http\Request;
 
-class ProductionDebugbar {
+class ProductionDebugbar
+{
     public static function create(): Cookie
     {
         $expiresAt = Carbon::now()->addHours(12);
@@ -25,9 +26,9 @@ class ProductionDebugbar {
      * @param  string  $key
      * @return bool
      */
-    public static function isValid(Request $request): bool
+    public static function isValid(?Request $request = null): bool
     {
-        if(!$request->hasCookie('enable_debug')){
+        if ($request === null || !$request->hasCookie('enable_debug')) {
             return false;
         }
 
@@ -42,13 +43,29 @@ class ProductionDebugbar {
     }
 
 
+    /**
+     * Checks if the debug mode should be enabled based on the request cookie and enables Debugbar if valid.
+     *
+     * @param  \Illuminate\Http\Request|null  $request
+     * @return bool  Returns true if debug mode is enabled, false otherwise.
+     */
     public static function check(?Request $request = null): bool
     {
-        if (self::isValid($request ?? request())) {
-            Debugbar::enable();
+        if (self::isValid($request)) {
+            if (class_exists(\Barryvdh\Debugbar\Facades\Debugbar::class)) {
+                Debugbar::enable();
+            } else {
+
+                if (app()->runningInConsole()) {
+                    throw new \Exception("Debugbar package is not installed. Please run 'composer require barryvdh/laravel-debugbar --dev'");
+                }
+
+                throw new \Illuminate\Contracts\Container\BindingResolutionException(
+                    "Target class [Barryvdh\Debugbar\Facades\Debugbar] does not exist. Please run 'composer require barryvdh/laravel-debugbar --dev' to install the package."
+                );
+            }
             return true;
         }
         return false;
     }
-
 }
