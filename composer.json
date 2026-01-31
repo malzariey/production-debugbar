@@ -21,7 +21,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.15",
+        "barryvdh/laravel-debugbar": "^4.0",
         "laravel/pint": "^1.14"
     },
     "autoload": {
